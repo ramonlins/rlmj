@@ -1,0 +1,15 @@
+This solution was taken from https://ai.stackexchange.com/questions/27931/what-is-the-probability-of-selecting-the-greedy-action-in-a-0-5-greedy-selection
+
+The difficult about this question is understand that when a random action selection happens, a greedy action can be selected. 
+
+So considering that:
+	p(ag) represent the probability of that an action is selected greedily 
+	p(ar) represent the probability of that an action is selected randomly 
+	p(gs) represent the probability of a greedy action is selected 
+
+thus,
+
+	p(gs) 	= p(gs and ag) + p(gs and ar)
+		= p(ag).p(gs/ag) + p(ar).p(gs/ar)
+		= 0.5*1 + 0.5*(1/2)
+		= 0.75
