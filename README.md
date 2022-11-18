@@ -1,2 +1,2 @@
-# rl_sutton2_unity
-This repository is used to build examples from reinforcement learning an introduction 2nd edition (Sutton and Barto) in unity3D.
+# Reinforcement Learning Theory and Practice
+This repository is used to study theory and practice reinforcement learning algorithms.
