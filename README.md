@@ -1,10 +1,10 @@
 # Theory and Practice
 This repository is used to study theory and practice reinforcement learning algorithms throught mujoco engine examples.
 
-Inside repository create a virtual enviroment:
+Inside repository execute following commands:
 ```
 python3 -m venv venv
-
+source venv/bin/activate
 ```
 
 Install necessary packages using the command bellow:
