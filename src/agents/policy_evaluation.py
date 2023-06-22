@@ -25,10 +25,10 @@ class PolicyEvaluation:
 
         # initialize value of policy
         self.V = {}
-        for state in self.states:
-            self.V[state] = 0
+        for s in self.states:
+            self.V[s] = 0
 
-    def update(self, policy: str, max_it: int = 100) -> dict:
+    def update(self, policy: str, is_debug: bool = True) -> dict:
         """
         Update rule:
             if s is end_state:
@@ -42,23 +42,27 @@ class PolicyEvaluation:
         # iterate until converge
         is_iterate = True
         while is_iterate:
+
+            if is_debug:
+                print(f"State Function: \n V{self.V} \n")
+
             # go throught all states
             for s in self.states:
                 # avoid undefined state-action in mdp
                 if s != self.end_state:
                     all_next_states = self.t_hash[s, policy].keys()
 
-                    Vf = 0
+                    Qf = 0
                     for next_s in all_next_states:
                         p_t, r = self.t_hash[s, policy][next_s]
-                        Vf += p_t * (r + gamma * self.V[next_s])
+                        Qf += p_t * (r + gamma * self.V[next_s])
 
                     # current V(in) - previous V(in)
-                    e = Vf - self.V[s]
+                    e = Qf - self.V[s]
 
                     if e < 1e-5:
                         is_iterate = False
 
-                    self.V[s] = Vf
+                    self.V[s] = Qf
 
         return self.V
