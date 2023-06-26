@@ -3,13 +3,13 @@ The Reinforcement Learning Fundamentals repository is a comprehensive collection
 
 Key Features:
 
-Tree-Search Algorithm: Dive into the realm of tree search techniques, which form an integral part of RL. Explore algorithms like Monte Carlo Tree Search (MCTS) and variants such as Upper Confidence Bound for Trees (UCT) to efficiently explore and exploit the state-action space.
+- **Tree-Search Algorithm**: Dive into the realm of tree search techniques, which form an integral part of RL. Explore algorithms like Monte Carlo Tree Search (MCTS) and variants such as Upper Confidence Bound for Trees (UCT) to efficiently explore and exploit the state-action space.
 
-Policy Evaluation: Gain a deep understanding of policy evaluation methods that enable agents to assess the quality of their actions and optimize their decision-making processes. Explore algorithms like iterative policy evaluation and temporal difference learning to estimate the value function of a given policy.
+- **Policy Evaluation**: Gain a deep understanding of policy evaluation methods that enable agents to assess the quality of their actions and optimize their decision-making processes. Explore algorithms like iterative policy evaluation and temporal difference learning to estimate the value function of a given policy.
 
-Value Iteration: Delve into the world of value iteration algorithms, a powerful family of methods for solving Markov Decision Processes (MDPs). Learn how to compute the optimal value function by iteratively updating the value estimates for each state based on the Bellman equation.
+- **Value Iteration**: Delve into the world of value iteration algorithms, a powerful family of methods for solving Markov Decision Processes (MDPs). Learn how to compute the optimal value function by iteratively updating the value estimates for each state based on the Bellman equation.
 
-Q-Learning: Discover one of the most popular and widely used reinforcement learning algorithms, Q-learning. Uncover the principles behind temporal difference learning, where agents learn to maximize their long-term rewards by estimating the action-value function (Q-values). Explore techniques such as epsilon-greedy exploration and experience replay for efficient learning.
+- **Q-Learning**: Discover one of the most popular and widely used reinforcement learning algorithms, Q-learning. Uncover the principles behind temporal difference learning, where agents learn to maximize their long-term rewards by estimating the action-value function (Q-values). Explore techniques such as epsilon-greedy exploration and experience replay for efficient learning.
 
 Each algorithm and concept within the repository is accompanied by detailed explanations, pseudocode, and implementation examples in Python. This ensures that learners can grasp the underlying theory while also gaining hands-on experience with practical implementations.
 
