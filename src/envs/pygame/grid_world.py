@@ -67,9 +67,9 @@ class GridWorldEnv(gym.Env):
         self._agent_location = self.np_random.integers(0, self.size, size=2, dtype=int)
 
         # We will sample the target's location randomly until it does not coincide with the agent's location
-        self._target_location = self._agent_location
+        self._target_location = np.array([0, 0], dtype=int)
         while np.array_equal(self._target_location, self._agent_location):
-            self._target_location = self.np_random.integers(
+            self._agent_location = self.np_random.integers(
                 0, self.size, size=2, dtype=int
             )
 
@@ -88,7 +88,7 @@ class GridWorldEnv(gym.Env):
         self._agent_location = np.clip(
             self._agent_location + direction, 0, self.size - 1
         )
-        # An episode is done iff the agent has reached the target
+        # An episode is done if the agent has reached the terminate state (assuming it always will)
         terminated = np.array_equal(self._agent_location, self._target_location)
         reward = 1 if terminated else 0  # Binary sparse rewards
         observation = self._get_obs()
