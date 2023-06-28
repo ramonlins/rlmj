@@ -3,7 +3,7 @@ class Backtracking:
     Solve a problem by backtracking.
 
     """
-    def _backtracking(self, TP) -> tuple:
+    def backtracking(self, TP) -> tuple:
         """
         This function attempts to solve a given problem, represented by a Transition Problem (TP),
         using a backtracking algorithm. It starts from the start state of the TP, and recursively
@@ -42,7 +42,7 @@ class Backtracking:
             env = Transportation(size=4)
             agent = Backtracking()
 
-            agent._backtracking(env)
+            agent.backtracking(env)
 
             outup -> ([('walk', 2, 1), ('walk', 3, 1), ('walk', 4, 1)], 3)
         """
