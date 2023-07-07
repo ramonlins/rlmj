@@ -2,11 +2,12 @@ import random
 from typing import List, Union
 
 from src.envs.python.dice_game import DiceGame
-
+from src.agents.policy_evaluation import PolicyEvaluation
 
 class ModelBasedMonteCarlo:
     def __init__(self, env):
         self.actions = env.actions
+        self.env = env
         # Initialize MDP for estimation
         self.transitions = {}
         self.rewards = {}
@@ -52,15 +53,34 @@ class ModelBasedMonteCarlo:
             for next_state in self.rewards[(state, action)]:
                 self.rewards[(state, action)][next_state] /= self.transitions[(state, action)][next_state]
 
+    def policy_evaluation(self, action: str):
+        V = {state: 0 for state in self.env.states}
+        gamma = 0.9999
+        for _ in range(100):
+            for state in self.env.states:
+                if (state, action) in self.transitions:
+                    all_possible_next_states = self.transitions[(state, action)]
+                    Q = 0
+                    for next_state in all_possible_next_states:
+                        transition_prob = self.transitions[(state, action)][next_state]
+                        reward = self.rewards[(state, action)][next_state]
+                        Q += transition_prob * (reward + gamma * V[next_state])
+
+                    V[state] = Q
+        return V
+
 
 def main():
+    debug = False
+
     env = DiceGame()
-    agent = ModelBasedMonteCarlo(env)
+    model_based_mc = ModelBasedMonteCarlo(env)
 
     eps = 10000
     for ep in range(eps):
 
-        print(f"Episode {ep}:", end=' ', flush=True)
+        if debug:
+            print(f"Episode {ep}:", end=' ', flush=True)
 
         state = env.reset()
         episode = []
@@ -76,18 +96,25 @@ def main():
 
             state = next_state
 
-        agent.update_transitions_and_rewards(episode)
+        model_based_mc.update_transitions_and_rewards(episode)
 
-        print(episode)
-        print(f"Transition : {agent.transitions}")
-        print(f"Acc Rewards: {agent.rewards}\n")
+        if debug:
+            print(episode)
+            print(f"Transition : {model_based_mc.transitions}")
+            print(f"Acc Rewards: {model_based_mc.rewards}\n")
 
-    agent.update_expected_rewards()
-    agent.update_transition_probabilites()
-    print(f"Transition Probabilites Estimated:{agent.transitions}")
-    print(f"Expected Rewards:{agent.rewards}")
+    model_based_mc.update_expected_rewards()
+    model_based_mc.update_transition_probabilites()
+    print(f"Transition Probabilites Estimated:{model_based_mc.transitions}")
+    print(f"Estimated Rewards:{model_based_mc.rewards}")
+
+    policy_evaluation = PolicyEvaluation(env)
+    print(f"True Transition Probabilites and Rewards: {policy_evaluation.mdp}")
+
+    print("Expected rewards:")
+    print(model_based_mc.policy_evaluation('stay'))
+    print(policy_evaluation.update("stay", False))
 
 
 if __name__ == "__main__":
     main()
-
