@@ -18,9 +18,9 @@ To test run:
 
 
 class PolicyEvaluation:
-    def __init__(self, mdp):
-        self.t_hash = mdp.t_hash
-        self.states = mdp.states
+    def __init__(self, env):
+        self.mdp = env.mdp
+        self.states = env.states
         self.end_state = self.states[1]
 
         # initialize value of policy
@@ -50,11 +50,11 @@ class PolicyEvaluation:
             for s in self.states:
                 # avoid undefined state-action in mdp
                 if s != self.end_state:
-                    all_next_states = self.t_hash[s, policy].keys()
+                    all_next_states = self.mdp[s, policy].keys()
 
                     Qf = 0
                     for next_s in all_next_states:
-                        p_t, r = self.t_hash[s, policy][next_s]
+                        p_t, r = self.mdp[s, policy][next_s]
                         Qf += p_t * (r + gamma * self.V[next_s])
 
                     # current V(in) - previous V(in)

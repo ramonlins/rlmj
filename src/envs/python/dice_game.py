@@ -8,10 +8,10 @@ class DiceGame:
     #          10 (state="in", action="quit")
     # dice   : [1,2] -> end; [3, 4, 5, 6] -> in
     def __init__(self):
-        # t_hash: mdp model
+        # mdp: mdp model
         # from action-state nodes get all possible actions from next state
         # (s, a) -> (S' in (S), T in [1, 2/3, 1/3],  R in [4, 10])
-        self.t_hash = {
+        self.mdp = {
             ("in", "stay"): {"in": (2/3, 4), "end": (1/3, 4)},
             ("in", "quit"): {"end": (1, 10)},
         }
