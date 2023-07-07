@@ -19,6 +19,9 @@ class DiceGame:
     def step(self, state: str, policy: str) -> str:
         # check next state
         next_state = state
+        reward = 4
+        terminal = False
+
         if state == "in" and policy == "stay":
             dice_result = random.randint(1, 6)  # roll dice
             # go to end state
@@ -27,8 +30,15 @@ class DiceGame:
         # go to end state
         elif state == "in" and policy == "quit":
             next_state = "end"
+            reward = 10
 
-        return next_state
+        if next_state == "end":
+            terminal = True
+
+        return next_state, reward, terminal, False
+
+    def reset(self):
+        return self.states[0]
 
     @property
     def states(self) -> list[str]:
