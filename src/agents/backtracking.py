@@ -1,26 +1,29 @@
+from src.envs.python.transportation import Transportation
+
+
 class Backtracking:
     """
-    Solve a problem by backtracking.
+    Backtracking algorithm applied to problems such as transportation problem
+    defined here as transition problems (TP).
 
+    TransitionProblem
+        Can be a instance of the transportation problem.
+        The TP should have the following properties:
+            - start_state: The state from which the solution path should start.
+            - end_state: The state at which the solution path should end.
+            - succ_and_cost(state): A method that takes a state and returns a list of
+            "transition units", where each transition unit is a tuple (action, new_state, cost)
+            representing a possible action at the current state, the resulting new state, and
+            the cost of the action.
     """
-    def backtracking(self, TP) -> tuple:
-        """
-        This function attempts to solve a given problem, represented by a Transition Problem (TP),
-        using a backtracking algorithm. It starts from the start state of the TP, and recursively
-        explores possible paths to the end state, maintaining the path and cost of the best solution
-        found so far.
+    def __init__(self, problem):
+        self.problem = problem
 
-        Parameters
-        ----------
-        TP : TransitionProblem
-            An instance of the TransitionProblem class representing the problem to be solved.
-            The TP should have the following properties:
-                - start_state: The state from which the solution path should start.
-                - end_state: The state at which the solution path should end.
-                - succ_and_cost(state): A method that takes a state and returns a list of
-                "transition units", where each transition unit is a tuple (action, new_state, cost)
-                representing a possible action at the current state, the resulting new state, and
-                the cost of the action.
+    def search(self) -> tuple:
+        """
+        This function attempts to solve a given problem, using a backtracking algorithm. It starts from the
+        start state of the TP, and recursively explores possible paths to the end state, maintaining the path
+        and cost of the best solution found so far.
 
         Returns
         -------
@@ -34,17 +37,6 @@ class Backtracking:
         Exception
             Raises an Exception if the TP object does not have the required properties.
 
-        Test:
-        ------
-            from src.envs.python.transportation import Transportation
-            from src.agents.backtracking import backtracking
-
-            env = Transportation(size=4)
-            agent = Backtracking()
-
-            agent.backtracking(env)
-
-            outup -> ([('walk', 2, 1), ('walk', 3, 1), ('walk', 4, 1)], 3)
         """
         best_cost: float = float('inf')
         best_path: list = None
@@ -53,7 +45,7 @@ class Backtracking:
             # preserve outside variables
             nonlocal best_path, best_cost
 
-            if state == TP.end_state:
+            if state == self.problem.end_state:
 
                 if total_cost < best_cost:
                     best_path = history
@@ -62,7 +54,7 @@ class Backtracking:
                 return
 
             # can return none, one or two transition units
-            transition_units = TP.succ_and_cost(state)
+            transition_units = self.problem.succ_and_cost(state)
 
             # go through possible transitions
             for transition_unit in transition_units:
@@ -75,6 +67,23 @@ class Backtracking:
                         total_cost+cost)
 
         # start recursion
-        recurse(TP.start_state, history=[], total_cost=0)
+        recurse(self.problem.start_state, history=[], total_cost=0)
 
         return best_path, best_cost
+
+
+def main():
+    import time
+
+    env = Transportation(size=9)
+    agent = Backtracking(env)
+
+    ti = time.time()
+    min_cost = agent.search()
+
+    print(min_cost)
+    print(f"Time spent: {time.time() - ti:.2}")
+
+
+if __name__ == "__main__":
+    main()

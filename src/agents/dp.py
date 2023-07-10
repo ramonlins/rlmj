@@ -5,19 +5,21 @@ class DynamicProgramming:
     """Dynamic Programming
 
         Traverse forward until find end state.
-        Get minimum over transitions:
+        Get minimum future cost over transitions (action, next_state, cost):
             iterate over transitions
                 Compute future cost backwards until find a transition
         Repeat steps until find minimum cost
+
     """
 
     def __init__(self, problem):
         # init cache to store future state cost
         self.cache = {}
         self.problem = problem
+        self.is_debug = False
 
     # traverse states until find end state
-    def dp(self, state):
+    def search(self, state):
         # Work as non-local variable inside recurse function
         cache = {}
 
@@ -34,7 +36,6 @@ class DynamicProgramming:
                 return cache[state]
 
             # Compute future cost:
-
             transition_units = self.problem.succ_and_cost(state)
 
             # Traverse until find end state.
@@ -45,9 +46,13 @@ class DynamicProgramming:
             # After iterate over transitions, get minimum cost
             # Repeat steps until find minimum cost
             future_cost = min(cost + _future_cost(next_state)
-                         for _, next_state, cost in transition_units)
+                              for _, next_state, cost in transition_units)
 
-            print(future_cost)
+            # Store in
+            cache[state] = future_cost
+
+            if self.is_debug:
+                print(future_cost)
 
             return future_cost
 
@@ -55,10 +60,16 @@ class DynamicProgramming:
 
 
 def main():
-    env = Transportation(size=4)
+    import time
+
+    env = Transportation(size=100)
     agent = DynamicProgramming(env)
 
-    agent.dp(1)
+    ti = time.time()
+    min_cost = agent.search(env.start_state)
+
+    print(min_cost)
+    print(f"Time spent: {time.time() - ti:.2}")
 
 
 if __name__ == "__main__":
