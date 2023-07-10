@@ -4,25 +4,40 @@ from typing import List, Union
 from src.envs.python.dice_game import DiceGame
 from src.agents.policy_evaluation import PolicyEvaluation
 
+
 class ModelBasedMonteCarlo:
+    """
+    Initializes the ModelBasedMonteCarlo class.
+
+    Args:
+        env (DiceGame): The environment for the Monte Carlo agent.
+    """
     def __init__(self, env):
         self.actions = env.actions
         self.env = env
+
         # Initialize MDP for estimation
         self.transitions = {}
         self.rewards = {}
 
-    def policy(self, state: str) -> str:
-        if state == 'in':
-            action = self.actions[random.randint(0, len(self.actions) - 1)]
-        else:
-            action = 'quit'
+    def policy(self) -> str:
+        """
+        Determines the action to take based on the current state.
+
+        Returns:
+            str: The action to take.
+        """
+        action = random.choice(self.env.actions)
 
         return action
 
-    def update_transitions_and_rewards(self,
-                                       episode: List[Union[str, str, str, int]]
-                                       ) -> dict:
+    def update_transitions_and_rewards(self, episode: List[Union[str, str, str, int]]) -> None:
+        """
+        Updates the transition probabilities and rewards based on the given episode.
+
+        Args:
+            episode (List[Union[str, str, str, int]]): The episode containing state, action, next_state, and reward.
+        """
         for state, action, next_state, reward in episode:
             # Compute the number of times a chance node transition occurs
             if (state, action) not in self.transitions:
@@ -42,24 +57,44 @@ class ModelBasedMonteCarlo:
             else:
                 self.rewards[(state, action)][next_state] += reward
 
-    def update_transition_probabilites(self):
+    def update_transition_probabilites(self) -> None:
+        """
+        Updates the transition probabilities based on the recorded transitions.
+        """
         for state, action in self.transitions:
             total_transitions = sum(self.transitions[(state, action)].values())
             for next_state in self.transitions[(state, action)]:
                 self.transitions[(state, action)][next_state] /= total_transitions
 
     def update_expected_rewards(self):
+        """
+        Updates the expected rewards based on the recorded rewards and the number of transitions
+        """
         for state, action in self.rewards:
             for next_state in self.rewards[(state, action)]:
                 self.rewards[(state, action)][next_state] /= self.transitions[(state, action)][next_state]
 
     def policy_evaluation(self, action: str):
-        V = {state: 0 for state in self.env.states}
+        """
+        Performs policy evaluation to estimate the state values.
+
+        Args:
+            action (str): The action to evaluate.
+
+        Returns:
+            dict: A dictionary with state values as the keys.
+        """
+
         gamma = 0.9999
+
+        V = {state: 0 for state in self.env.states}
+
         for _ in range(100):
             for state in self.env.states:
+
                 if (state, action) in self.transitions:
                     all_possible_next_states = self.transitions[(state, action)]
+
                     Q = 0
                     for next_state in all_possible_next_states:
                         transition_prob = self.transitions[(state, action)][next_state]
@@ -71,6 +106,10 @@ class ModelBasedMonteCarlo:
 
 
 def main():
+    """
+    Main function to run the model-based Monte Carlo algorithm.
+    """
+
     debug = False
 
     env = DiceGame()
@@ -83,9 +122,10 @@ def main():
             print(f"Episode {ep}:", end=' ', flush=True)
 
         state = env.reset()
+
         episode = []
         while True:
-            action = random.choice(env.actions)
+            action = model_based_mc.policy()
 
             next_state, reward, terminal, _ = env.step(state, action)
 
