@@ -1,47 +1,51 @@
 from collections import deque
 
 
-def bfs(adj_list):
-    # root node
-    root_node = 'A'
+class BFS:
+    def __init__(self):
+        self.adj_list = {
+            'A': ['B', 'C'],
+            'B': ['D', 'E'],
+            'C': ['F', 'G'],
+            'D': [],
+            'E': [],
+            'F': [],
+            'G': []
+        }
 
-    # init
-    queue = deque()
-    queue.append(root_node)
-    visited = []
-    paths = {}
+    def search(self):
+        # root node
+        root_node = 'A'
 
-    # Extend elements instead of strings
-    paths[root_node] = [root_node]
-    while queue:
-        node = queue.popleft()
+        # init
+        queue = deque()
+        queue.append(root_node)
+        visited = []
+        paths = {}
 
-        # Avoid visited nodes
-        if node not in visited:
-            childs = adj_list[node]
-            visited.append(node)
+        # Extend elements instead of strings
+        paths[root_node] = [root_node]
+        while queue:
+            node = queue.popleft()
 
-            # Put child node into queue
-            for child in childs:
-                queue.append(child)
-                paths[child] = paths[node] + [child]
+            # Avoid visited nodes
+            if node not in visited:
+                childs = self.adj_list[node]
+                visited.append(node)
 
-    return paths
+                # Put child node into queue
+                for child in childs:
+                    queue.append(child)
+                    # Extend child to path
+                    paths[child] = paths[node] + [child]
+
+        return paths
 
 
 def main():
-    adj_lst = {
-        'A': ['B', 'C'],
-        'B': ['D', 'E'],
-        'C': ['F', 'G'],
-        'D': [],
-        'E': [],
-        'F': [],
-        'G': []
-    }
+    agent = BFS()
 
-    print(bfs(adj_lst))
-
+    print(agent.search())
 
 if __name__ == "__main__":
     main()
