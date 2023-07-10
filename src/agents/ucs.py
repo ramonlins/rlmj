@@ -42,9 +42,11 @@ class UniformCostSearch:
         parent = {1: None}
 
         # Start exploring shortest path
+        print("Visited states: ", end='')
         while queue:
             # Get past cost to state
             past_cost, state = heapq.heappop(queue)
+            print(f"{state}", end=' ', flush=True)
 
             # Backtracking states from end state
             if state == self.dst:
@@ -75,12 +77,12 @@ class UniformCostSearch:
 
 
 def main():
-    env = Transportation(size=9)
+    env = Transportation(size=20)
 
     agent = UniformCostSearch(env)
 
     path, cost = agent.search()
-
+    print()
     print(f"Path: {path}, Cost: {cost}")
 
     return 0
