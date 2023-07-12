@@ -4,7 +4,7 @@ from typing import Tuple, List
 from src.envs.python.transportation import Transportation
 
 
-class UniformCostSearch:
+class AStarSearch:
     """Implements the Uniform Cost Search algorithm to find the shortest path in a graph.
 
     Args:
@@ -13,43 +13,51 @@ class UniformCostSearch:
     Attributes:
         problem (Transportation): The problem instance to be solved.
         src (int): The start state of the problem.
-        dst (int): The end state of the problem.
+        goal (int): The end state of the problem.
 
     """
 
     def __init__(self, problem: Transportation):
         self.problem = problem
         self.src = problem.start_state
-        self.dst = problem.end_state
+        self.goal = problem.end_state
 
     def search(self) -> Tuple[List[int], int]:
-        """Performs the Uniform Cost Search algorithm to find the shortest path.
+        """Performs the A Star Search algorithm to find the shortest path.
 
         Returns:
-            tuple: A tuple containing the shortest path and its cost.
-
+            tuple: A tuple containing the cost and the shortest path sequence.
         """
-        # Use a min heap to guarantee minimum cost to s
-        queue = [(0, self.src)]
 
-        # Store possible next states
+        # Assume that the max cost from a given state to the end is two
+        def heuristic(state, goal):
+            if state == goal:
+                return 0
+            return 2
+
+        # Use a min heap to guarantee minimum cost for state
+        queue = [(0, self.src)]
+        heapq.heapify(queue)
+
+        # Store all the possible next states
         frontier = {self.src: 0}
 
-        # Mark state as already visited
+        # Mark the state as already visited
         explored = [self.src]
 
-        # Keep tracking state parent
+        # Keep tracking state parent for backtracking path
         parent = {1: None}
 
         # Start exploring shortest path
         print("Visited states: ", end='')
         while queue:
             # Get past cost to state
-            past_cost, state = heapq.heappop(queue)
+            _, state = heapq.heappop(queue)
+
             print(f"{state}", end=' ', flush=True)
 
             # Backtracking states from end state
-            if state == self.dst:
+            if state == self.goal:
                 paths = []
                 while state is not None:
                     paths.append(state)
@@ -58,17 +66,24 @@ class UniformCostSearch:
                 # Reverse path
                 paths = paths[::-1]
 
-                return paths, frontier[self.dst]
+                return paths, frontier[self.goal]
 
             # Check cost of neighboor states
             for _, next_state, cost in self.problem.succ_and_cost(state):
-                # PastCost + current cost
-                new_cost = past_cost + cost
+                # PastCost + c(s, a)
+                # NOTE: The heuristic costs in queue are not the same as real past cost in frontier
+                #       this is why path_cost changes in relation to ucs algorithm.
+                path_cost = frontier[state] + cost
 
                 # Add new cost and next states to queue
-                if next_state not in explored or new_cost < frontier[next_state]:
-                    frontier[next_state] = new_cost
-                    heapq.heappush(queue, (new_cost, next_state))
+                if next_state not in explored or path_cost < frontier[next_state]:
+                    frontier[next_state] = path_cost
+
+                    path_cost_future = path_cost + heuristic(next_state, self.goal)
+                    #path_cost_h = path_cost + 0
+
+                    heapq.heappush(queue, (path_cost_future, next_state))
+
                     parent[next_state] = state
 
                 # Avoid duplication
@@ -77,9 +92,9 @@ class UniformCostSearch:
 
 
 def main():
-    env = Transportation(size=20)
+    env = Transportation(size=10)
 
-    agent = UniformCostSearch(env)
+    agent = AStarSearch(env)
 
     path, cost = agent.search()
     print()
