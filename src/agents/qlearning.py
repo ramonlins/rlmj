@@ -39,4 +39,4 @@ class QL:
         if s_ not in self.Q:
             self._init_Q(s_, r, a)
 
-        self.Q[s][a] = self.Q[s][a] + self.lr * (r + self.df * max(self.Q[s_]) - self.Q[s][a])
+        self.Q[s][a] += self.lr * (r + self.df * max(self.Q[s_]) - self.Q[s][a])
