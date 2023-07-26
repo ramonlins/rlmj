@@ -1,0 +1,10 @@
+<mujoco>
+  <worldbody>
+    <geom type="plane" size="1 1 0.1" rgba=".9 0 0 1"/>
+    <body pos="0 0 0.1">
+      <geom type="sphere" pos="0 0 0" size=".1" rgba=".9 .9 .1 1"/>
+      <geom type="cylinder" pos="0 0 0.1" size=".05 .1" rgba=".9 .9 .1 1"/>
+      <joint type="free"/>
+    </body>
+  </worldbody>
+</mujoco>
