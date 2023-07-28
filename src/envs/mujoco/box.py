@@ -41,42 +41,44 @@ import sys
 
 import mujoco
 import numpy as np
+from typing import Any
 
 from mujoco.glfw import glfw
 
 # Buttons state
-button_right = False
-button_left = False
-button_middle = False
+button_right: bool = False
+button_left: bool = False
+button_middle: bool = False
 
 # Callback initiation
-lastx = 0
-lasty = 0
+lastx: float = 0.0
+lasty: float = 0.0
 
 # Get the full path
-file_name = "box.xml"
-dir_path = os.path.dirname(__file__)
-xml_path = os.path.join(dir_path + '/models/' + file_name)
+file_name: str = "box.xml"
+dir_path: str = os.path.dirname(__file__)
+xml_path: str = os.path.join(dir_path, "models", file_name)
 
 # Start data structure
-model = mujoco.MjModel.from_xml_path(xml_path)
-data = mujoco.MjData(model)
-camera = mujoco.MjvCamera()
-option = mujoco.MjvOption()
+model: mujoco.MjModel = mujoco.MjModel.from_xml_path(xml_path)
+data: mujoco.MjData = mujoco.MjData(model)
+camera: mujoco.MjvCamera = mujoco.MjvCamera()
+option: mujoco.MjvOption = mujoco.MjvOption()
 
-# Everything to Render 3D in opengl
-scene = mujoco.MjvScene(model, maxgeom=10000)
+# Everything to Render 3D in OpenGL
+scene: mujoco.MjvScene = mujoco.MjvScene(model, maxgeom=10000)
 
 
-def keyboard(window, key, scancode, action, mods):
+def keyboard(window: Any, key: int, scancode: int, action: int, mods: int) -> None:
+    """Keyboard callback function."""
     pass
 
 
-def mouse_button(window, button, action, mods):
+def mouse_button(window: Any, button: int, action: int, mods: int) -> None:
+    """Mouse button callback function."""
+
     # Update button state
-    global button_left
-    global button_middle
-    global button_right
+    global button_left, button_middle, button_right
 
     button_left = (glfw.get_mouse_button(window, glfw.MOUSE_BUTTON_LEFT) == glfw.PRESS)
     button_middle = (glfw.get_mouse_button(window, glfw.MOUSE_BUTTON_MIDDLE) == glfw.PRESS)
@@ -86,9 +88,9 @@ def mouse_button(window, button, action, mods):
     glfw.get_cursor_pos(window)
 
 
-def mouse_move(window, xpos, ypos):
-    global lastx
-    global lasty
+def mouse_move(window: Any, xpos: float, ypos: float) -> None:
+    """Mouse move callback function."""
+    global lastx, lasty
 
     # Compute mouse displacement; save
     dx = xpos - lastx
@@ -128,6 +130,8 @@ def mouse_move(window, xpos, ypos):
 
 
 def scroll(window, xoffset, yoffset):
+    """Mouse scroll callback function."""
+
     action = mujoco.mjtMouse.mjMOUSE_ZOOM
 
     mujoco.mjv_moveCamera(model,
@@ -140,6 +144,8 @@ def scroll(window, xoffset, yoffset):
 
 
 def main():
+    """Main function for the simulation and rendering."""
+
     # Create opengl context
     glfw.init()
 
@@ -161,8 +167,8 @@ def main():
 
     # Set GLFW I/O (mouse, keyboard) callbacks
     glfw.set_key_callback(window, keyboard)
-    glfw.set_cursor_pos_callback(window, mouse_move)    # Track mouse position to the window
-    glfw.set_mouse_button_callback(window, mouse_button)# Track mouse state
+    glfw.set_cursor_pos_callback(window, mouse_move)  # Track mouse position to the window
+    glfw.set_mouse_button_callback(window, mouse_button)  # Track mouse state
     glfw.set_scroll_callback(window, scroll)
 
     # Top down perspective
