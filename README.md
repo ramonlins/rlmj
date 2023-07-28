@@ -17,7 +17,6 @@ Additionally, the repository provides a curated selection of supplementary resou
 
 Whether you are an academic researcher, a student, or an industry practitioner, the Reinforcement Learning Fundamentals repository equips you with the necessary knowledge and tools to master the fundamental concepts and algorithms of RL and apply them to a wide range of real-world problems. Start your journey into the fascinating world of RL today!
 
-The main focus in the future will be to implement reinforcement learning algorithms through different engines (focus will be mujoco) examples. (***under development***) 
 
 # Get start
 Inside the repository execute the following commands:
@@ -36,3 +35,27 @@ To test some examples run:
 ```
 python get_start.py
 ```
+
+## Mujoco (***under development***)
+The primary focus of this repository is to implement reinforcement learning algorithms using various engines such as Mujoco and Unity3D.
+
+Simulating, rendering, and controlling objects in Mujoco presents some challenges and complexities.
+
+The simulation application is written in C/C++, but there are limitations when working with Mujoco in Python.
+
+To address this, we have added a script to this repository that handles the process of simulating and controlling objects using the Mujoco and GLFW libraries. Currently, the simulation can be executed successfully, but the controlling functionality is still a work in progress.
+
+To run the simulation, navigate to the 'src/envs/mujoco' directory and execute the following command:
+```bash
+python simulation_script.py
+```
+
+```
+python box.py
+```
+
+it will display a interactive window such as ilustrated in figure bellow.
+
+![Box simulation](/images/box.png)
+
+References are in the script.
