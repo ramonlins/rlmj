@@ -1,7 +1,7 @@
 import numpy as np
 
 # TODO: Clean code, create a start state-acttion function, add docstring
-class QL:
+class SARSA:
     def __init__(self):
         self.Q = {}
         self.df = 0.99
@@ -39,4 +39,6 @@ class QL:
         if s_ not in self.Q:
             self._init_Q(s_, r, a)
 
-        self.Q[s][a] += self.lr * (r + self.df * max(self.Q[s_]) - self.Q[s][a])
+        a_ = self.action(s_)
+
+        self.Q[s][a] += self.lr * (r + self.df * self.Q[s_][a_] - self.Q[s][a])

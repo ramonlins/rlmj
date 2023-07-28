@@ -7,6 +7,11 @@ class DiceGame:
     # rewards: 4  (state="in", action="stay")
     #          10 (state="in", action="quit")
     # dice   : [1,2] -> end; [3, 4, 5, 6] -> in
+    #
+    # Reference:
+    #    The stanford-cs221 course lecture taken from:
+    #    https://www.youtube.com/watch?v=aIsgJJYrlXk&list=PLoROMvodv4rOca_Ovz1DvdtWuz8BfSWL2&index=17
+
     def __init__(self):
         # mdp: mdp model
         # from action-state nodes get all possible actions from next state
@@ -16,7 +21,17 @@ class DiceGame:
             ("in", "quit"): {"end": (1, 10)},
         }
 
-    def step(self, state: str, policy: str) -> str:
+    def step(self, state: str, policy: str) -> tuple[str, int, bool, bool]:
+        """
+        Perform a step in the environment.
+
+        Args:
+            state (str): The current state.
+            policy (str): The chosen policy.
+
+        Returns:
+            tuple[str, int, bool, bool]: The next state, reward, terminal flag, and additional information.
+        """
         # check next state
         next_state = state
         reward = 4
@@ -27,13 +42,14 @@ class DiceGame:
             # go to end state
             if dice_result in [1, 2]:
                 next_state = "end"
+                return next_state, reward, True, False
+
         # go to end state
         elif state == "in" and policy == "quit":
             next_state = "end"
             reward = 10
 
-        if next_state == "end":
-            terminal = True
+            return next_state, reward, True, False
 
         return next_state, reward, terminal, False
 

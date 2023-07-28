@@ -13,7 +13,6 @@ class ModelBasedMonteCarlo:
         env (DiceGame): The environment for the Monte Carlo agent.
     """
     def __init__(self, env):
-        self.actions = env.actions
         self.env = env
 
         # Initialize MDP for estimation

@@ -1,6 +1,10 @@
 import gymnasium as gym
+
 from src.agents.qlearning import QL
 
+# NOTE: Large gridworlds should take long time since episode will only end
+# when agent find terminal state. The enviroment should be modified to handle
+# truncated end.
 env = gym.make("src:src/GridWorld-v0", render_mode="human", size=4)
 agent = QL()
 print(agent)
