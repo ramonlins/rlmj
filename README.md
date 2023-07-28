@@ -46,9 +46,6 @@ The simulation application is written in C/C++, but there are limitations when w
 To address this, we have added a script to this repository that handles the process of simulating and controlling objects using the Mujoco and GLFW libraries. Currently, the simulation can be executed successfully, but the controlling functionality is still a work in progress.
 
 To run the simulation, navigate to the 'src/envs/mujoco' directory and execute the following command:
-```bash
-python simulation_script.py
-```
 
 ```
 python box.py
