@@ -55,7 +55,7 @@ lastx: float = 0.0
 lasty: float = 0.0
 
 # Get the full path
-file_name: str = "box.xml"
+file_name: str = "box_cylinder.xml"
 dir_path: str = os.path.dirname(__file__)
 xml_path: str = os.path.join(dir_path, "models", file_name)
 
@@ -69,17 +69,36 @@ option: mujoco.MjvOption = mujoco.MjvOption()
 scene: mujoco.MjvScene = mujoco.MjvScene(model, maxgeom=10000)
 
 
-def keyboard(window: Any, key: int, scancode: int, action: int, mods: int) -> None:
-    """Keyboard callback function."""
-    pass
+def keyboard(window: Any, key: int,
+             scancode: int,
+             action: int,
+             mods: int) -> None:
+    if key == glfw.KEY_W:
+        if (action == glfw.PRESS or glfw.REPEAT):
+            # Move in x
+            data.qpos[1] += 0.01
+    elif key == glfw.KEY_A:
+        if (action == glfw.PRESS or glfw.REPEAT):
+            # Move in -x
+            data.qpos[0] += -0.01
+    elif key == glfw.KEY_S:
+        if (action == glfw.PRESS or glfw.REPEAT):
+            # Move in -y
+            data.qpos[1] += -0.01
+    elif key == glfw.KEY_D:
+        if (action == glfw.PRESS or glfw.REPEAT):
+            # Move in x
+            data.qpos[0] += 0.01
+
+    # Avoid rotation
+    data.qpos[3:7] = [0.0, 0.0, 0.0, 0.0]
 
 
 def mouse_button(window: Any, button: int, action: int, mods: int) -> None:
     """Mouse button callback function."""
-
-    # Update button state
     global button_left, button_middle, button_right
 
+    # Update button state
     button_left = (glfw.get_mouse_button(window, glfw.MOUSE_BUTTON_LEFT) == glfw.PRESS)
     button_middle = (glfw.get_mouse_button(window, glfw.MOUSE_BUTTON_MIDDLE) == glfw.PRESS)
     button_right = (glfw.get_mouse_button(window, glfw.MOUSE_BUTTON_RIGHT) == glfw.PRESS)
@@ -131,7 +150,6 @@ def mouse_move(window: Any, xpos: float, ypos: float) -> None:
 
 def scroll(window, xoffset, yoffset):
     """Mouse scroll callback function."""
-
     action = mujoco.mjtMouse.mjMOUSE_ZOOM
 
     mujoco.mjv_moveCamera(model,
@@ -145,7 +163,6 @@ def scroll(window, xoffset, yoffset):
 
 def main():
     """Main function for the simulation and rendering."""
-
     # Create opengl context
     glfw.init()
 
@@ -177,10 +194,17 @@ def main():
     camera.distance = 5.0
     camera.lookat = np.array([0.0, 0.0, 0.0])
 
-    start = time.time()
+    last_update_time = glfw.get_time()
+    dt = 1.0/ 240.0
     while not glfw.window_should_close(window):
-        while time.time() - start < 1.0/60.0:
+        # Update MuJoCo simulation incrementally
+        current_time = glfw.get_time()
+        elapsed_time = current_time - last_update_time
+
+        while elapsed_time >= dt:
             mujoco.mj_step(model, data)
+            elapsed_time -= dt
+            last_update_time += dt
 
         # Get framebuffer viewport to ensure right pixel and screen coordinates map
         viewport_width, viewport_height = glfw.get_framebuffer_size(window)
@@ -189,12 +213,12 @@ def main():
         # Update scene
         # The mjtCatBit type specifies which geom category should be rendered in this case all
         mujoco.mjv_updateScene(model,
-                                data,
-                                option,
-                                None,
-                                camera,
-                                mujoco.mjtCatBit.mjCAT_ALL.value,
-                                scene)
+                               data,
+                               option,
+                               None,
+                               camera,
+                               mujoco.mjtCatBit.mjCAT_ALL.value,
+                               scene)
 
         # Render scene
         mujoco.mjr_render(viewport, scene, context)
