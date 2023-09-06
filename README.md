@@ -3,7 +3,7 @@ This repository is a comprehensive collection of essential concepts and algorith
 
 Key Features:
 
-- **Tree-Search Algorithm**: Dive into the realm of tree search techniques, which form an integral part of RL. Explore algorithms like Backtracking Search, and variants such as Dynamic Programming (DP) to efficiently explore and exploit the state-action space.
+- **Tree-Search Algorithm**: Dive into tree search techniques, which form an integral part of RL. Explore algorithms like Backtracking Search, and variants such as Dynamic Programming (DP) to efficiently explore and exploit the state-action space.
 
 - **Policy Evaluation**: Gain a deep understanding of policy evaluation methods that enable agents to assess the quality of their actions and optimize their decision-making processes. Explore algorithms like iterative policy evaluation to estimate the value function of a given policy.
 
