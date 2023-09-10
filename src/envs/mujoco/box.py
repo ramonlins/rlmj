@@ -73,22 +73,23 @@ def keyboard(window: Any, key: int,
              scancode: int,
              action: int,
              mods: int) -> None:
+    speed = 0.02
     if key == glfw.KEY_W:
         if (action == glfw.PRESS or glfw.REPEAT):
             # Move in x
-            data.qpos[1] += 0.01
+            data.qpos[1] += speed
     elif key == glfw.KEY_A:
         if (action == glfw.PRESS or glfw.REPEAT):
             # Move in -x
-            data.qpos[0] += -0.01
+            data.qpos[0] += -speed
     elif key == glfw.KEY_S:
         if (action == glfw.PRESS or glfw.REPEAT):
             # Move in -y
-            data.qpos[1] += -0.01
+            data.qpos[1] += -speed
     elif key == glfw.KEY_D:
         if (action == glfw.PRESS or glfw.REPEAT):
             # Move in x
-            data.qpos[0] += 0.01
+            data.qpos[0] += speed
 
     # Avoid rotation
     data.qpos[3:7] = [0.0, 0.0, 0.0, 0.0]
@@ -155,10 +156,9 @@ def scroll(window, xoffset, yoffset):
     mujoco.mjv_moveCamera(model,
                           action,
                           0.0,
-                          -0.05 * yoffset,  # NOTE: Why change yoffset ?
+                          -0.05 * yoffset,
                           scene,
-                          camera
-                          )
+                          camera)
 
 
 def main():
@@ -195,7 +195,7 @@ def main():
     camera.lookat = np.array([0.0, 0.0, 0.0])
 
     last_update_time = glfw.get_time()
-    dt = 1.0/ 240.0
+    dt = 1.0 / 240.0
     while not glfw.window_should_close(window):
         # Update MuJoCo simulation incrementally
         current_time = glfw.get_time()
@@ -212,6 +212,7 @@ def main():
 
         # Update scene
         # The mjtCatBit type specifies which geom category should be rendered in this case all
+        #time.sleep(1)
         mujoco.mjv_updateScene(model,
                                data,
                                option,
